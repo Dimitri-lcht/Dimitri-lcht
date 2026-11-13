@@ -17,3 +17,40 @@ git pull origin (nom de la branche)
 
 ----retrouver les dernieres modifs depuis un nouvel appareil----
 git clone <URL> [Nom du dossier qui va être créer] (pas obligatoire par défaut le nom du repository)
+
+----travailler avec des branches----
+git status (verifier que tout est commite avant de changer de branche)
+git fetch origin (recuperer les branches distantes sans rien modifier)
+git branch (lister les branches locales)
+git checkout (nom de la branche) (se placer sur une branche, la cree en local si elle existe sur origin)
+git checkout -b (nom de la branche) (creer une nouvelle branche et se placer dessus)
+
+----fusionner une branche (merge)----
+git checkout (branche a mettre a jour)
+git merge origin/main (ramener les changements de main dans la branche)
+si conflit : ouvrir les fichiers, garder ce qui doit rester, supprimer les marqueurs <<<<<<< ======= >>>>>>>
+git add (fichiers en conflit)
+git commit (le message de fusion est pre-rempli)
+git push
+git merge --abort (annuler la fusion, seulement avant le commit)
+
+----pull request (Gitea / GitHub)----
+- la PR doit etre sans conflit : resoudre les conflits en local (voir merge ci-dessus) puis git push, la PR se met a jour toute seule
+- l'auteur d'une PR ne peut pas l'approuver lui-meme : un autre membre doit faire Fichiers modifies > Reviser > Approuver
+- modes de fusion : commit de fusion (garde tout), squash (un seul commit), rebase (historique lineaire)
+- une fois la PR fusionnee, ne pas repousser la branche : Gitea refuse ensuite de la supprimer depuis la PR
+
+----apres une PR fusionnee (nettoyage)----
+git checkout main
+git pull
+git log --oneline -3 (verifier que le commit de fusion est en haut)
+git branch -d (nom de la branche) (supprimer en local, le -d minuscule refuse si pas fusionnee)
+git push origin --delete (nom de la branche) (supprimer sur le serveur)
+
+----push rejete (non-fast-forward)----
+cause : la branche locale est en retard sur la branche distante
+solution : git pull puis git push
+ne jamais utiliser git push --force sans savoir ce qu'on ecrase
+
+----pull avec rebase----
+git pull --rebase origin (nom de la branche) (rejoue les commits locaux au dessus de la branche distante, historique lineaire)
